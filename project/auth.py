@@ -60,4 +60,4 @@ def signUp():
 @login_required
 def logout():
     logout_user()
-    return render_template("logout.html")
+    return render_template("logout.html",user = current_user)
