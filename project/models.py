@@ -15,4 +15,6 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True, nullable=False)
     f_name = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    is_verified = db.Column(db.Boolean,nullable = False, default = False)
+    otp = db.Column(db.Integer,nullable = True)
     notes = db.relationship('Notes')
