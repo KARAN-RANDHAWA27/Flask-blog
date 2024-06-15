@@ -5,7 +5,8 @@ from sqlalchemy.sql import func
 
 
 class Notes(db.Model):
-    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(2000))
     data = db.Column(db.String(20000))
     created_date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

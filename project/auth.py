@@ -6,7 +6,7 @@ from flask_login import login_user,logout_user,login_required,current_user
 
 auth = Blueprint('auth',__name__)
 
-@auth.route('/')
+@auth.route('/',methods=['GET','POST'])
 def loginPage():
     if request.method == 'POST':
         email = request.form.get('email')
@@ -17,13 +17,13 @@ def loginPage():
             if check_password_hash(user.password, password):
                 flash("Login Successfull", category='success')
                 login_user(user,remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.homepage'))
             else:
                 flash("Login Failed", category='error')
                 return render_template("login.html",user=current_user)
         else:
             flash("Email does not exist", category='error')
-            return render_template("sign-up.html",user = current_user)
+            return redirect(url_for('auth.signUp'))
     return render_template("login.html",user = current_user)
 
 @auth.route("/login", methods=['GET','POST'])
@@ -37,13 +37,13 @@ def login():
             if check_password_hash(user.password, password):
                 flash("Login Successfull", category='success')
                 login_user(user,remember=True)
-                return redirect(url_for('views.home'))
+                return redirect(url_for('views.homepage'))
             else:
                 flash("Login Failed", category='error')
                 return render_template("login.html",user=current_user)
         else:
             flash("Email does not exist", category='error')
-            return render_template("sign-up.html",user = current_user)
+            return redirect(url_for('auth.signUp'))
     return render_template("login.html",user = current_user)
 
 @auth.route("/sign-up" , methods=['GET','POST'])
@@ -73,7 +73,7 @@ def signUp():
             db.session.add(new_user)
             db.session.commit()
             flash("Done", category='success')  
-            return redirect(url_for('views.home'))      
+            return redirect(url_for('views.homepage'))      
     return render_template("signup.html",user = current_user)
 
 @auth.route("/logout")
