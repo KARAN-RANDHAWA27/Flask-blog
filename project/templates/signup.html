@@ -3,29 +3,29 @@
   Sign Up
 {% endblock %}
 {% block content %}
-  <div class="flex justify-center mt-5 pt-3">
-    <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700 mx-auto ">
+  <div class="flex justify-center mt-3 pt-3">
+    <div class="mt-5 w-full max-w-sm p-4 bg-gray-800 border border-gray-700 rounded-lg shadow-lg sm:p-6 md:p-8 mx-auto">
       <form class="space-y-6" method="post">
-        <h5 class="text-xl font-medium text-gray-900 dark:text-white">Create New Account</h5>
+        <h5 class="text-xl font-medium text-white">Create New Account</h5>
         <div>
-          <label for="email" class=" block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-          <input type="email" name="email" id="email" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Enter Email Address" required />
+          <label for="email" class="block mb-2 text-sm font-medium text-white">Your email</label>
+          <input type="email" name="email" id="email" class="w-full bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:placeholder-gray-400" placeholder="Enter Email Address" required />
         </div>
         <div>
-          <label for="f_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-          <input type="text" name="f_name" id="f_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Enter First Name" required />
+          <label for="f_name" class="block mb-2 text-sm font-medium text-white">First Name</label>
+          <input type="text" name="f_name" id="f_name" class="w-full bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:placeholder-gray-400" placeholder="Enter First Name" required />
         </div>
         <div>
-          <label for="password1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Password</label>
-          <input type="password" name="password1" id="password1" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+          <label for="password1" class="block mb-2 text-sm font-medium text-white">Enter Password</label>
+          <input type="password" name="password1" id="password1" placeholder="••••••••" class="w-full bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:placeholder-gray-400" required />
         </div>
         <div>
-          <label for="password2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm Password</label>
-          <input type="password" name="password2" id="password2" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
+          <label for="password2" class="block mb-2 text-sm font-medium text-white">Confirm Password</label>
+          <input type="password" name="password2" id="password2" placeholder="••••••••" class="w-full bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 dark:placeholder-gray-400" required />
         </div>
         <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign Up</button>
-        <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-          Already Member? <a href="/login" class="text-blue-700 hover:underline dark:text-blue-500">Sign In</a>
+        <div class="text-sm font-medium text-gray-300">
+          Already Member? <a href="/login" class="text-blue-500 hover:underline">Sign In</a>
         </div>
       </form>
     </div>

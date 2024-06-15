@@ -3,5 +3,111 @@
   Karan
 {% endblock %}
 {% block content %}
-  This is a homepage
+  <div class="w-full max-w-4xl mx-auto p-6">
+    <div class="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6">
+      <div class="mb-6">
+        <input type="text" placeholder="Search notes..." class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-blue-500 focus:border-blue-500" />
+      </div>
+      <div class="mb-6 flex justify-end">
+        <button type="button" class="custom-gradient text-white font-bold py-2 px-4 rounded-full h-12 w-12 flex items-center justify-center shadow-lg" data-toggle="modal" data-target="#noteModal">+</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% if notes %}
+          {% for note in notes %}
+            <div class="bg-gray-700 border border-gray-600 rounded-lg p-4" data-id="{{ note.id }}" data-title="{{ note.title }}" data-content="{{ note.data }}">
+              <div class="text-sm text-gray-400 mb-2">{{ note.created_date.strftime('%Y-%m-%d %H:%M') }}</div>
+              <div class="text-lg font-medium text-white mb-2">{{ note.title }}</div>
+              <div class="text-gray-300">{{ note.data }}...</div>
+              <button type="button" class="btn btn-info edit-note-button mt-2" id="editButton">Edit</button>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-lg font-medium text-white mb-2">NO notes found</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="noteModalLabel">Add New Note</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <form id="noteForm" method="post">
+          <div class="modal-body">
+            <div class="form-group">
+              <input type="hidden" id="noteId" name="title" />
+              <label for="noteTitle" class="text-sm font-medium text-gray-900 dark:text-white">Title</label>
+              <input type="text" id="noteTitle" name="title" class="form-control" required />
+            </div>
+            <div class="form-group mt-3">
+              <label for="noteContent" class="text-sm font-medium text-gray-900 dark:text-white">Content</label>
+              <textarea id="noteContent" name="content" class="form-control" rows="4" required></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" id="submitBtn" class="btn btn-primary">Save</button>
+            <button type="button" id="updatBtn" class="btn btn-primary" style="display: none;">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const editButton = document.querySelectorAll('.edit-note-button')
+    
+      editButton.forEach((button) => {
+        button.addEventListener('click', function () {
+          const noteId = this.parentElement.getAttribute('data-id')
+          const title = this.parentElement.getAttribute('data-title')
+          const content = this.parentElement.getAttribute('data-content')
+    
+          document.getElementById('noteId').value = noteId
+    
+          document.getElementById('noteTitle').value = title
+          document.getElementById('noteContent').value = content
+    
+          document.getElementById('submitBtn').style.display = 'none'
+          document.getElementById('updatBtn').style.display = 'inline-block'
+          document.getElementById('noteModalLabel').textContent = 'Update Note'
+    
+          $('#noteModal').modal('show')
+        })
+      })
+    
+      $('#noteModal').on('hidden.bs.modal', function () {
+        document.getElementById('noteForm').reset()
+        document.getElementById('submitBtn').style.display = 'inline-block'
+        document.getElementById('updatBtn').style.display = 'none'
+        document.getElementById('noteId').value = ''
+      })
+    
+      document.getElementById('updatBtn').addEventListener('click', function () {
+        console.log('uuuuuuu')
+        const noteId = document.getElementById('noteId').value
+        const title = document.getElementById('noteTitle').value
+        const content = document.getElementById('noteContent').value
+    
+        fetch(`/home?note_id=${noteId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ title: title, content: content })
+        }).then((response) => {
+          if (response.ok) {
+            $('#noteModal').modal('hide');
+            window.location.reload();
+          } else {
+            alert('Error Updating Notes');
+          }
+        })
+      })
+    })
+  </script>
 {% endblock %}
