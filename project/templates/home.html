@@ -3,7 +3,7 @@
   Karan
 {% endblock %}
 {% block content %}
-  <div class="w-full max-w-4xl mx-auto p-6">
+  <div class="w-full max-w-8xl mx-auto p-6">
     <div class="bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-6">
       <div class="mb-6">
         <input type="text" placeholder="Search notes..." class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-blue-500 focus:border-blue-500" />
@@ -11,14 +11,15 @@
       <div class="mb-6 flex justify-end">
         <button type="button" class="custom-gradient text-white font-bold py-2 px-4 rounded-full h-12 w-12 flex items-center justify-center shadow-lg" data-toggle="modal" data-target="#noteModal">+</button>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-6">
         {% if notes %}
           {% for note in notes %}
             <div class="bg-gray-700 border border-gray-600 rounded-lg p-4" data-id="{{ note.id }}" data-title="{{ note.title }}" data-content="{{ note.data }}">
               <div class="text-sm text-gray-400 mb-2">{{ note.created_date.strftime('%Y-%m-%d %H:%M') }}</div>
               <div class="text-lg font-medium text-white mb-2">{{ note.title }}</div>
-              <div class="text-gray-300">{{ note.data }}...</div>
+              <div class="text-gray-300">{{ note.data[:10] }}...</div>
               <button type="button" class="btn btn-info edit-note-button mt-2" id="editButton">Edit</button>
+              <button type="button" class="btn btn-info delete-note-button mt-2" id="deleteBtn" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-trash" aria-hidden="true" style="color: red;"></i></button>
             </div>
           {% endfor %}
         {% else %}
@@ -32,7 +33,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="noteModalLabel">Add New Note</h5>
+          <h2 class="modal-title" id="noteModalLabel">Add New Note</h2>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <form id="noteForm" method="post">
@@ -57,9 +58,28 @@
     </div>
   </div>
 
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title" id="deleteModalLabel">Delete Confirmation</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <h6 class="modal-title" id="deleteModalLabel">Are You Sure You Want To Delete The Note?</h6>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" id="deleteNoteBtn" class="btn btn-primary">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const editButton = document.querySelectorAll('.edit-note-button')
+      const deleteButton = document.querySelectorAll('.delete-note-button')
     
       editButton.forEach((button) => {
         button.addEventListener('click', function () {
@@ -85,10 +105,10 @@
         document.getElementById('submitBtn').style.display = 'inline-block'
         document.getElementById('updatBtn').style.display = 'none'
         document.getElementById('noteId').value = ''
+        document.getElementById('noteModalLabel').textContent = 'Add New Note'
       })
     
       document.getElementById('updatBtn').addEventListener('click', function () {
-        console.log('uuuuuuu')
         const noteId = document.getElementById('noteId').value
         const title = document.getElementById('noteTitle').value
         const content = document.getElementById('noteContent').value
@@ -101,10 +121,35 @@
           body: JSON.stringify({ title: title, content: content })
         }).then((response) => {
           if (response.ok) {
-            $('#noteModal').modal('hide');
-            window.location.reload();
+            $('#noteModal').modal('hide')
+            window.location.reload()
           } else {
-            alert('Error Updating Notes');
+            alert('Error Updating Notes')
+          }
+        })
+      })
+    
+      deleteButton.forEach((button) => {
+        button.addEventListener('click', function () {
+          const noteId = this.parentElement.getAttribute('data-id')
+          document.getElementById('noteId').value = noteId
+        })
+      })
+    
+      document.getElementById('deleteNoteBtn').addEventListener('click', function () {
+        const noteId = document.getElementById('noteId').value
+    
+        fetch(`/home?note_id=${noteId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-type': 'application/json'
+          }
+        }).then((response) => {
+          if (response.ok) {
+            $('#deleteModal').modal('hide')
+            window.location.reload()
+          } else {
+            toastr.error('Note Deletion Failed')
           }
         })
       })
