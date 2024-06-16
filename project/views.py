@@ -6,11 +6,10 @@ from project.db import db
 views = Blueprint('views',__name__)
 
 
-@views.route('/home',methods=['GET','POST','PUT'])
+@views.route('/notes',methods=['GET','POST','PUT','DELETE'])
 @login_required
 def homepage():
     userNotes = Notes.query.filter_by(user_id = current_user.id).all()
-    print(userNotes)
     if request.method == 'POST':
         title = request.form.get('title')
         content = request.form.get('content')
@@ -35,15 +34,27 @@ def homepage():
                     content = data.get('content')
                     noteInstance.title = title
                     noteInstance.data =  content
-                    print('------------------------')
-                    print(noteInstance)
                     db.session.commit()
-                    print("huuuu")
                     flash("Note updated successfully", category='success')
                     return redirect(url_for('views.homepage'))
                 else:
-                    flash("Note updated successfully", category='success')
+                    flash("Note updation failed", category='success')
             except Exception as e:
                 db.session.rollback()
                 print(f"Error updating note: {str(e)}")
+
+    elif request.method == 'DELETE':
+        note_id = request.args.get('note_id')
+        try:
+            noteInstance = Notes.query.filter_by(id = note_id, user_id = current_user.id).first()
+            if noteInstance:
+                db.session.delete(noteInstance)
+                db.session.commit()
+                flash("Note deleted successfully",category='error')
+            else:
+                flash("Note deletion failed",category='error')
+        except Exception as e:
+            print(e)
+            flash("Note deletion failed",category='error')
+
     return render_template("home.html",user = current_user, notes = userNotes)
